@@ -1,0 +1,89 @@
+\begin{center}
+  \section*{Googleのソフトウェア開発を支えるテクノロジー}
+\end{center}
+
+
+\begin{flushright}
+  \begin{itemize}
+  \item   登壇者: Google Cloud Solutions Architect 中井悦司
+  \item 資料: 非公開
+  \end{itemize}
+\end{flushright}
+
+\section*{概要}
+Googleが社内でソフトウェア開発に適用しているツールおよびルールに関する発表\\
+Googleは下記ようなソースコードの管理、開発のルールの徹底と
+リソース管理ツールにより最適な環境への自動配備の仕組みにより
+開発者はアプリケーション開発に専念することができている。
+
+\begin{itemize}
+
+\item コード管理
+  \begin{itemize}
+  \item ツール: Git
+  \item ルール:
+    \begin{itemize}
+    \item リポジトリ戦略: シングルリポジトリ
+    \item ブランチルール: master-release ブランチのみ
+    \end{itemize}
+  \end{itemize}
+
+\item ビルド
+  \begin{itemize}
+  \item ツール: Blaze
+  \item ルール: 定期的な一括ビルド
+  \end{itemize}
+
+\item コードレビュー
+  \begin{itemize}
+  \item ツール: Gerrit
+  \item ルール: 小さな変更ごとのレビュー
+  \end{itemize}
+
+\end{itemize}
+
+\section*{詳細}
+
+Googleが提供するサービスの利用者は全世界に10億人いる。
+日々サービスの提供およびメンテナンスがおこなわれている。
+発表では、Solutions Architect, Google Cloudの中井悦司氏が、Google社内で迅速に開発をおこなうための技術について発表された。\\
+
+発表で取り上げられた技術は、コードの管理とルールおよびリソース管理についてである。
+
+\subsection*{コード管理}
+
+Googleは、コード管理に分散型バージョン管理システムGitを採用している。
+社内のすべてのソースコードをGitの単一リポジトリに格納し、
+masterブランチとreleaseブランチの2つによりバージョンを管理している。
+また、コードの規約として共有ライブラリを使用せず、すべてのコードをimportして利用することとしている。\\
+
+上記のようにコードを管理することで各プロジェクトの開発内容の共有が簡便になり、
+車輪の開発の防止と有用なツールの再利用を実現している。\\
+
+膨大なリポジトリのクローンは、
+独自のシステムによりリポジトリのスナップショットコピーを取得し、
+ネットワーク経由でスナップショットをローカルマシーンにマウントします。
+そうすることで、ローカルマシーン上に膨大なデータを所有および転送する必要がなるため、迅速な開発が実現します。\\
+
+
+\subsection*{コードのビルド}
+
+コードのビルドはBlazeと呼ばれる社内ツールにより自動ビルドされる。
+ビルドにかかった時間などを集計しレファクタリングをおこなっている。\\
+
+膨大なコードを定期的なビルドするためにチェックポイントを設けて実行時間をずらす工夫をしている。
+さらに自動テストにおいては、10ホップ以上はテストしないなどの経験にもとずくコード管理がなされている。
+
+\subsection*{コードレビュー}
+
+コードのレビューにはGerritの様な独自ツールによってレビューをおこなっている。
+reviweeはレビュアーをプロジェクトのオーナー以外に指定する工夫によるコードの品質向上に
+\subsection*{リソース管理}
+\subsection*{参考文献}
+\begin{itemize}
+\item \href{https://ai.google/research/pubs/pub45424}{Why Google Stores Billions of Lines of Code in a Aingle Repository}
+\item \href{https://ai.google/research/pubs/pub47025}{Modern Code Review: A Case Study at Google}
+\item \href{https://ai.google/research/pubs/pub45861}{Taming Google-Scale Continuous Testing}
+\item \href{https://ai.google/research/pubs/pub46576}{Lessons from Building Static Analysis Tools at Google}
+\item \href{https://www.school.ctc-g.co.jp/columns/nakai2/}{グーグルを支えるテクノロジー}
+\end{itemize}

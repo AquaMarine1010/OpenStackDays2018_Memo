@@ -1,0 +1,97 @@
+\begin{center}
+  \section*{国内最大級のOpenStackパブリッククラウド \\
+    FUJITSU Cloud Service K5 を支えるコンテナとCI/CD技術}
+\end{center}
+
+
+\begin{flushright}
+  \begin{itemize}
+  \item   登壇者: 岩松 昇、小西 洋太郎、下國 治、松木 辰真
+  \item 資料: 
+  \end{itemize}
+\end{flushright}
+
+\section*{概要}
+
+富士通はパブリッククラウドFUJITSU Cloud Service K5を運用している。
+本発表は、K5のOpenStack基盤の構築とログ管理に関するものであった。\\
+
+K5の基盤構築には、KollaをもちいOpenStackの各コンポーネントをコンテナで構築している。
+配備および運用をInfrastructure as Code化するため、
+機器選定の段階でSoftware Definedのものを選択し設定し
+OS内部の設定はDockerfileとAnsibleでおこなっている。\\
+
+ログ解析では、Elastic Stackをもちいログを一元管理し障害のログを時系列で即座に追える環境を構築している。
+
+\section*{詳細}
+
+富士通はOpenStackをIaaS基盤にパブリッククラウド \href{http://jp.fujitsu.com/solutions/cloud/k5/}{FUJITSU Cloud Service K5}を提供している。
+現在、OpenStack Ocataバージョンで次のK5で下記11のOpenStackコンポーネントを提供している。
+
+\begin{itemize}
+\item nova
+\item ironic
+\item keystone
+\item barbica
+\item neutron
+\item swift
+\item octavia
+\item cinder
+\item trove
+\item glance
+\item heat
+\end{itemize}
+
+バージョンは1世代飛しで追随しており、まもなくQueenの提供を開始する。\\
+
+K5はパブリッククラウドであるため想定外の使い方による障害の発生が起き迅速に対応を迫られる。
+また、事業拡大のためにはニーズに素早く対応するため迅速なバージョンアップや機能追加などが求められる。
+さらにIT業界で生きのこるにこれらの要件を低コストで満す必要がある。\\
+
+富士通ではK5の運用において以下の取り組みをおこなっている。
+
+\begin{itemize}
+\item software definedによる機器の運用
+\item コンテナによるOpenStackの各コンポーネントの構築
+\item 各コンポーネント、機器のログの一元管理
+\end{itemize}
+
+本発表では、上記の2、3点目についての発表であった。
+
+\subsection*{コンテナによるOpenStackの各コンポーネントの構築}
+
+コンテナをもちいたOpenStackの構築では、\href{https://docs.openstack.org/kolla/latest/}{Kolla}をもちいている。
+Kollaはコンテナの定義ファイルのDockerfile群のKollaとOSの配備をおこなう定義ファイル群Kolla-Ansibleの2つに分かれる。
+K5の運用では両者をもちい実行にJenkinsをもちい、Dockerレジストリにイメージを登録するとコンテナを再起動するというパイプラインを構築している。\\
+
+Kollaをもちいた自動構築フローによって以下のメリットが生まれる。
+
+\begin{itemize}
+\item 切り戻しが容易
+\item 柔軟なシステム構成の実現が容易
+\item 学習コストが低い
+\end{itemize}
+
+各コンポーネントがコンテナにて疎結合に構築されていると、
+障害発生時に安定バージョンにコンポーネントの切り替えることができ切り戻しが容易になる。\\
+
+各コンポーネントの設定値をDockerfileとAnsibleの設定ファイルで記載しているため、
+設定の変更項目を変更し配備を実行することで設定変更ができるため意図したシステム構成を容易に構築できる。\\
+
+Kollaでの構築にpython、AnsibleとDockerの技術をもちいており、
+容易に学習が可能となっている。\\
+
+\subsection*{各コンポーネント、機器のログの一元管理}
+
+OpenStackおよびその基盤が生成するログを一元管理するため、K5は \href{https://www.elastic.co/jp/products}{Elastic Stack}および \href{https://kafka.apache.org/}{Apache Kafka}をもちいている。
+システム構成は、ログファイルをFileBeatsにて収集しKafkaにQueuingし、
+Logstashによりログデータを構造化、ElasticSearchに蓄積しKibanaで可視化するものとなっている。\\
+
+OpenStackの各コンポーネントはコンテナで構築されており、FileBeatsによるログファイルの収集との親和性が高い。
+これは、コンテナのログデータをコンテナのホストマシンに保存されるようになっており、
+ホストマシンにFileBeatsの収集箇所を指定すれば、コンテナを変更しても常にLogstashに送信し続ける仕組みとなっているためである。\\
+
+本システムは100台のcompute ノードが存在し、1日に600万ドキュメント(1ドキュメントはログの1行と同じ)のデータが発生する。
+これは、40GBのデータ量に相当する。\\
+この膨大なデータから迅速に障害を特定するため、Logstashに1300のフィルターを設定し構造化している。
+このことにより、特定の障害のログをKibanaで簡便に検索できる、各ノードのログの統計データを簡便に可視化できるようになっている。

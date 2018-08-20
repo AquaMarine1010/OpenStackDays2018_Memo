@@ -1,0 +1,50 @@
+\begin{center}
+  \section*{IT Automation with OpenStack and Ansible/AWX}
+\end{center}
+
+
+\begin{flushright}
+  \begin{itemize}
+  \item   登壇者: レッドハット株式会社 斉藤 秀喜
+  \item 資料: 
+  \end{itemize}
+\end{flushright}
+
+
+\section*{概要}
+
+Ansible/AWXは構成管理ツールAnsibleに不足している機能を提供するものである。
+提供機能は下記の通りである。
+
+\begin{itemize}
+\item Webフロント
+\item ホストの認証管理
+\item 実行ユーザーの管理
+\item ログの一元管理
+\item ワークフローの定義
+\item 外部機能との連携API
+\end{itemize}
+
+AWXはコンテナで構成されKubernetesで構築されており、
+スケールアウトを簡便に実現することができる。
+
+\section*{詳細}
+
+構成管理ツールAnsibleはホストへ定義したタスクを実行するツールである。
+もともとタスクを実行することにのみ特化したツールであるため、
+Ansible単体ではIaCのCI/CDを実現する統合ITオートメーションを構築できない。
+そこで、Ansible AWXの開発がすすめられている。
+
+Ansible AWXはAnsible単体で実現できなかった次のことを実現する。
+
+\begin{itemize}
+\item 実行ユーザーの管理
+\item 実行ログの収集
+\item ワークフローの定義
+\item キャパシティー管理
+\item 外部システムとの連携用API
+\item IaaS連携
+\item リビジョン管理
+\item Web UI
+\end{itemize}
+
